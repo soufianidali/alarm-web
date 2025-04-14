@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Alarm Settings</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      padding: 20px;
+    }
+    .container {
+      max-width: 500px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+    }
+    .alarm {
+      margin-bottom: 20px;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .alarm label {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .alarm input {
+      width: 100%;
+      padding: 5px;
+      margin-bottom: 10px;
+    }
+    .btn {
+      padding: 10px 20px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #0056b3;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Alarm Settings</h2>
+
+    <div class="alarm">
+      <label>Alarm 1 (HH:MM):</label>
+      <input type="time" id="alarm1">
+    </div>
+    <div class="alarm">
+      <label>Alarm 2 (HH:MM):</label>
+      <input type="time" id="alarm2">
+    </div>
+    <div class="alarm">
+      <label>Alarm 3 (HH:MM):</label>
+      <input type="time" id="alarm3">
+    </div>
+    <div class="alarm">
+      <label>Alarm 4 (HH:MM):</label>
+      <input type="time" id="alarm4">
+    </div>
+
+    <button class="btn" onclick="saveAlarms()">Save</button>
+  </div>
+
+  <script>
+    function saveAlarms() {
+      const a1 = document.getElementById('alarm1').value;
+      const a2 = document.getElementById('alarm2').value;
+      const a3 = document.getElementById('alarm3').value;
+      const a4 = document.getElementById('alarm4').value;
+
+      const alarms = [a1, a2, a3, a4];
+
+      alarms.forEach((time, index) => {
+        if (time) {
+          const [hour, minute] = time.split(":");
+          fetch(`http://192.168.4.1/set_alarm?num=${index+1}&hour=${hour}&minute=${minute}`)
+            .then(response => console.log("Alarm", index+1, "updated"))
+            .catch(err => console.error("Error:", err));
+        }
+      });
+
+      alert("Alarms sent to ESP32");
+    }
+  </script>
+</body>
+</html>
